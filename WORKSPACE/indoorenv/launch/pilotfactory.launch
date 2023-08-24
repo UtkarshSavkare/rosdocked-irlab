@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- Add Gazebo model path-->
+  
+  <env name="GAZEBO_MODEL_PATH" value="$(find turbo_gazebo)/models:$GAZEBO_MODEL_PATH" />
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turbo_gazebo)/worlds/pilotfactory.world"/>
+    <!-- more default parameters can be changed here -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+  
+  <param name="robot_description" command="$(find xacro)/xacro $(find turbo_description)/xacro/robot.xacro" />
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
+  
+
+    <!-- launch Mobile Manipulator -->
+  <!-- <include file="$(find turtlebot3_manipulation_gazebo)/launch/turtlebot3_manipulation_for_factory.launch"> -->
+  <!-- </include> -->
+
+</launch>

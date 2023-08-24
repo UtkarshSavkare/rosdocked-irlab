@@ -6,8 +6,8 @@
 ################################################################################
 
 # Default value
-# ARG BASE_IMAGE=robopaas/rosdocked-noetic-base-cpu:latest
-ARG BASE_IMAGE
+ARG BASE_IMAGE=robopaas/rosdocked-noetic-base-cpu:latest
+# ARG BASE_IMAGE
 FROM $BASE_IMAGE 
 
 # Arguments
@@ -77,7 +77,10 @@ git clone https://github.com/RobotnikAutomation/robotnik_msgs.git && \
 git clone https://github.com/RobotnikAutomation/robotnik_sensors.git -b kinetic-devel && \
 git clone https://github.com/RobotnikAutomation/ros-system-monitor && \
 git clone https://github.com/RobotnikAutomation/summit_xls_ur5_common.git -b kinetic-multirobot-devel && \
-git clone https://github.com/RobotnikAutomation/summit_xl_common.git -b melodic-master 
+git clone https://github.com/RobotnikAutomation/summit_xl_common.git -b melodic-master && \
+git clone https://github.com/winwinashwin/frontier_exploration.git -b noetic-devel && \
+git clone https://github.com/UtkarshSavkare/Summit_SAR.git 
+
 # One of the two packages is needed only on robot controlling UR5 arm
 # git clone https://github.com/RobotnikAutomation/ur_modern_driver.git # deprecated in favor of UniversalRobots/Universal_Robots_ROS_Driver.git 
 # git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git
@@ -93,7 +96,7 @@ RUN echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc && \
     echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
 
 #solve orbecc astra bug in xacro
-RUN sed -i 's/<sensor_orbbec_astra_gazebo/<xacro:sensor_orbbec_astra_gazebo/g' /home/$USER/catkin_ws/src/summit_xl_sources/robotnik_sensors/urdf/orbbec_astra.urdf.xacro
+#RUN sed -i 's/<sensor_orbbec_astra_gazebo/<xacro:sensor_orbbec_astra_gazebo/g' /home/$USER/catkin_ws/src/summit_xl_sources/robotnik_sensors/urdf/orbbec_astra.urdf.xacro
 
 # configure repos for niryo
 # RUN cd ~/catkin_ws/src/niryo_one_bringup && git checkout -b gazebo-simulator && git pull origin gazebo-simulator
@@ -122,7 +125,8 @@ RUN sudo apt-get update && \
 
 
 # build workspace
-RUN cd ~/catkin_ws && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build && source devel/setup.bash"
+RUN cd ~/catkin_ws && \
+ /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build && source devel/setup.bash"
 
 # patch summit_xl old files and add unmerged PRs
 RUN bash -c "cd ~/catkin_ws/src/summit_xl_sources/summit_xl_common/summit_xl_description/urdf/wheels ; \
