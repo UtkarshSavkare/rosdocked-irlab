@@ -11,6 +11,8 @@ services:
     command: roscore
     volumes:
       - /home/guest/rosdocked-irlab/WORKSPACE:/host
+      - /home/guest/rosdocked-irlab/m-explore:/home/ros/catkin_ws/src/m-explore
+      - /home/guest/rosdocked-irlab/icclab_summit_xl:/home/ros/catkin_ws/src/icclab_summit_xl
 
   novnc:  
     image: robopaas/novnc:labs
